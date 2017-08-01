@@ -9,6 +9,7 @@ We are using Helm along with Quay.io to host our Helm charts.  See https://githu
 See https://docs.helm.sh for more about Helm.
 
 # Prerequisites
+* Helm 2.5.1
 * Kubernetes 1.4+ with Beta APIs enabled
 * [Helm Registry plugin](https://github.com/app-registry/appr-helm-plugin)
 
@@ -45,22 +46,24 @@ helm registry install quay.io/3dsim/node-exporter --name=my-release -f values.ya
 If you make changes and want to push a new version to quay.io, do the following...
 
 1.  Bump the version in [Chart.yaml](Chart.yaml).
-2.  Commit all outstanding changes to github
-3.  If you  modified the dependencies in `requirements.yaml`, run the following commands to update them.  (Currently dependencies are pushed to quay.io repo, but not checked into github.)
+2.  If you modified the dependencies in `requirements.yaml`, run the following commands to update them.  (Currently dependencies are pushed to quay.io repo, and checked into github.)
 ```
+helm repo add opsgoodness http://charts.opsgoodness.com
+helm repo add cloudposse https://charts.cloudposse.com/incubator
+rm -rf charts/ appr_charts/
 helm registry dep --overwrite
 helm dep build
 ```
 The above steps were taken from [this github comment](https://github.com/app-registry/appr-helm-plugin/issues/3#issuecomment-302701693)
-4. Login to quay.io (if you haven't previously)
+3. Login to quay.io (if you haven't previously)
 ```
 helm registry login -u <your username> quay.io
 ```
-5. Push new version
+4. Push new version
 ```
 helm registry push --namespace 3dsim quay.io
 ```
 
 See https://github.com/app-registry/appr-helm-plugin#create-and-push-your-own-chart for more info.
 
-6. Revert `requirements.yaml` changes.  (The `registry` plugin for helm modified the file.  We do not want to check them in.)
+5.  Commit all outstanding changes to github

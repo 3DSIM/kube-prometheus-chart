@@ -15,6 +15,12 @@ dependencies:
 - name: exporter-kubelets
   repository: https://charts.cloudposse.com/incubator
   version: 0.1.0
+- name: node-exporter
+  repository: file://appr_charts/3dsim/node-exporter
+  version: 0.1.0
+- name: grafana
+  repository: file://appr_charts/3dsim/grafana
+  version: 0.1.0
 - name: prometheus
   repository: http://charts.opsgoodness.com
   version: 0.0.3
