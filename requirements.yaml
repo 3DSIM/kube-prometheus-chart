@@ -1,0 +1,32 @@
+appr:
+- name: quay.io/3dsim/node-exporter
+  repository: appr://
+  version: 0.1.0
+- name: quay.io/3dsim/grafana
+  repository: appr://
+  version: 0.1.0
+dependencies:
+- name: exporter-kube-state
+  repository: https://charts.cloudposse.com/incubator
+  version: 0.1.0
+- name: alertmanager
+  repository: http://charts.opsgoodness.com
+  version: 0.0.3
+- name: exporter-kubelets
+  repository: https://charts.cloudposse.com/incubator
+  version: 0.1.0
+- name: prometheus
+  repository: http://charts.opsgoodness.com
+  version: 0.0.3
+- name: exporter-kube-etcd
+  repository: https://charts.cloudposse.com/incubator
+  version: 0.1.0
+- name: exporter-kube-api
+  repository: https://charts.cloudposse.com/incubator
+  version: 0.1.0
+- name: exporter-kube-dns
+  repository: https://charts.cloudposse.com/incubator
+  version: 0.1.0
+- name: exporter-kubernetes
+  repository: https://charts.cloudposse.com/incubator
+  version: 0.1.0
