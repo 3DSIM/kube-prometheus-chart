@@ -15,7 +15,7 @@ See https://docs.helm.sh for more about Helm.
 # Installing this chart
 To install with release name `my-release` run:
 ```
-helm registry install quay.io/3dsim/node-exporter --name=my-release
+helm registry install quay.io/3dsim/node-exporter --name=my-release --set grafana.dataSourceURL=<url of prometheus>
 ```
 
 # Uninstalling the Chart
@@ -42,4 +42,25 @@ helm registry install quay.io/3dsim/node-exporter --name=my-release -f values.ya
 ```
 
 # Developers
-Modify the chart and be sure to bump the version in [Chart.yaml](Chart.yaml).  After that, follow these directions to push the changes to Quay.io: https://github.com/app-registry/appr-helm-plugin#create-and-push-your-own-chart
+If you make changes and want to push a new version to quay.io, do the following...
+
+1.  Bump the version in [Chart.yaml](Chart.yaml).
+2.  Commit all outstanding changes to github
+3.  If you  modified the dependencies in `requirements.yaml`, run the following commands to update them.  (Currently dependencies are pushed to quay.io repo, but not checked into github.)
+```
+helm registry dep --overwrite
+helm dep build
+```
+The above steps were taken from [this github comment](https://github.com/app-registry/appr-helm-plugin/issues/3#issuecomment-302701693)
+4. Login to quay.io (if you haven't previously)
+```
+helm registry login -u <your username> quay.io
+```
+5. Push new version
+```
+helm registry push --namespace 3dsim quay.io
+```
+
+See https://github.com/app-registry/appr-helm-plugin#create-and-push-your-own-chart for more info.
+
+6. Revert `requirements.yaml` changes.  (The `registry` plugin for helm modified the file.  We do not want to check them in.)
