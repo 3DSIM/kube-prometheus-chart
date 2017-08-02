@@ -11,12 +11,18 @@ See https://docs.helm.sh for more about Helm.
 # Prerequisites
 * Helm 2.5.1
 * Kubernetes 1.4+ with Beta APIs enabled
+* [Prometheus Operator 0.0.6](https://github.com/coreos/prometheus-operator/blob/master/helm/prometheus-operator/README.md)
+If you haven't installed previously, run:
+```
+helm repo add opsgoodness http://charts.opsgoodness.com
+helm install opsgoodness/prometheus-operator --version 0.0.6 --name po
+```
 * [Helm Registry plugin](https://github.com/app-registry/appr-helm-plugin)
 
 # Installing this chart
 To install with release name `my-release` run:
 ```
-helm registry install quay.io/3dsim/node-exporter --name=my-release --set grafana.dataSourceURL=<url of prometheus>
+helm registry install quay.io/3dsim/node-exporter --name=my-release --set grafana.dataSourceURL=<url of prometheus> --set prometheus.externalUrl=<url of prometheus> --set prometheus.externalLabels.env=<env>
 ```
 
 # Uninstalling the Chart
