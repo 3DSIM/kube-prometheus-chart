@@ -5,19 +5,26 @@ alertmanager:
   config:
     global:
       resolve_timeout: 5m
+      victorops_api_key: de3e9dcd-4ade-4b46-9d0f-c641ba9b837c
     route:
       group_by: ['job']
       group_wait: 30s
       group_interval: 5m
       repeat_interval: 12h
-      receiver: 'victorOps-receiver'
+      receiver: 'default-victorops-receiver'
+    routes:
+    - receiver: critical-victorops-receiver
+      match_re:
+        env: prod|gov
+      match:
+        severity: critical
     receivers:
-    - name: victorOps-receiver
+    - name: default-victorops-receiver
       victorops_configs:
-        - api_key: de3e9dcd-4ade-4b46-9d0f-c641ba9b837c
-          from: Prometheus
-          routing_key: noncritical
-          message: 'Alert: {{ .CommonLabels.alertname }}. Summary:{{ .CommonAnnotations.summary }}. RawData: {{ .CommonLabels }}'
+        - routing_key: noncritical
+    - name: critical-victorops-receiver
+      victorops_configs:
+        - routing_key: critical
 
   ## External URL at which Alertmanager will be reachable
   ##
@@ -27,7 +34,7 @@ alertmanager:
   ##
   image:
     repository: quay.io/prometheus/alertmanager
-    tag: v0.5.1
+    tag: v0.8.0
 
   ingress:
     ## If true, Alertmanager Ingress will be created
@@ -130,6 +137,10 @@ prometheus:
     specifiedInValues: true
     value: {}
 
+  ## External labels to add to any time series or alerts when communicating with external systems
+  ##
+  externalLabels: {}
+
   ## External URL at which Prometheus will be reachable
   ##
   externalUrl: ""
@@ -138,7 +149,7 @@ prometheus:
   ##
   image:
     repository: quay.io/prometheus/prometheus
-    tag: v1.5.2
+    tag: v1.7.1
 
   ingress:
     ## If true, Prometheus Ingress will be created
