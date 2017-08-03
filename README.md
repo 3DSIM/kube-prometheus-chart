@@ -9,7 +9,8 @@ We are using Helm along with Quay.io to host our Helm charts.  See https://githu
 See https://docs.helm.sh for more about Helm.
 
 # Prerequisites
-* Helm 2.5.1
+* [Helm 2.5.1](https://docs.helm.sh/using_helm/#installing-the-helm-client)
+    * Run `helm init` prior to any other commands
 * Kubernetes 1.4+ with Beta APIs enabled
 * [Prometheus Operator 0.0.6](https://github.com/coreos/prometheus-operator/blob/master/helm/prometheus-operator/README.md)
 If you haven't installed previously, run:
@@ -22,7 +23,7 @@ helm install opsgoodness/prometheus-operator --version 0.0.6 --name po
 # Installing this chart
 To install with release name `my-release` run:
 ```
-helm registry install quay.io/3dsim/node-exporter --name=my-release --set grafana.dataSourceURL=<url of prometheus> --set prometheus.externalUrl=<url of prometheus> --set prometheus.externalLabels.env=<env>
+helm registry install quay.io/3dsim/kube-prometheus --name=my-release --set grafana.dataSourceURL=<url of prometheus> --set prometheus.externalUrl=<url of prometheus> --set prometheus.externalLabels.env=<env>
 ```
 
 # Uninstalling the Chart
@@ -39,13 +40,13 @@ See [values.yaml](values.yaml) for configuration options.
 
 Use `--set` syntax to set a value:
 ```console
-helm registry install quay.io/3dsim/node-exporter --name=my-release --set resources.limits.cpu=300m
+helm registry install quay.io/3dsim/kube-prometheus --name=my-release --set resources.limits.cpu=300m
 ```
 
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
 ```console
-helm registry install quay.io/3dsim/node-exporter --name=my-release -f values.yaml
+helm registry install quay.io/3dsim/kube-prometheus --name=my-release -f values.yaml
 ```
 
 # Adding new Grafana dashboards
