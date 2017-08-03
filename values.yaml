@@ -12,12 +12,12 @@ alertmanager:
       group_interval: 5m
       repeat_interval: 12h
       receiver: 'default-victorops-receiver'
-    routes:
-    - receiver: critical-victorops-receiver
-      match_re:
-        env: prod|gov
-      match:
-        severity: critical
+      routes:
+      - receiver: critical-victorops-receiver
+        match_re:
+            env: prod|gov
+        match:
+            severity: critical
     receivers:
     - name: default-victorops-receiver
       victorops_configs:
