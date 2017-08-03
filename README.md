@@ -48,6 +48,29 @@ Alternatively, a YAML file that specifies the values for the parameters can be p
 helm registry install quay.io/3dsim/node-exporter --name=my-release -f values.yaml
 ```
 
+# Adding new Grafana dashboards
+* Create the dashboard in Grafana UI.
+* Export the dashboard as JSON.
+* Insert exported JSON in the template below:
+
+```
+{
+  "dashboard": {
+      < Paste exported JSON here >
+  },
+  "inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "pluginId": "prometheus",
+      "type": "datasource",
+      "value": "prometheus"
+    }
+  ],
+  "overwrite": true
+}
+```
+* Add to the `grafana.serverDashboardFiles` field in `values.yaml`
+
 # Developers
 If you make changes and want to push a new version to quay.io, do the following...
 
