@@ -23,7 +23,21 @@ helm install opsgoodness/prometheus-operator --version 0.0.6 --name po
 # Installing this chart
 To install with release name `my-release` run:
 ```
-helm registry install quay.io/3dsim/kube-prometheus --name=my-release --set grafana.dataSourceURL=<url of prometheus> --set prometheus.externalUrl=<url of prometheus> --set prometheus.externalLabels.env=<env>
+helm registry install quay.io/3dsim/kube-prometheus --name=my-release --set grafana.dataSourceURL=<url of prometheus> --set prometheus.externalUrl=<url of prometheus> --set prometheus.externalLabels.env=<env> --set prometheus.retention=720h
+```
+
+For DR add this option:
+```
+--set prometheus.resources.requests.memory=1000Mi
+```
+
+# Upgrading the chart
+Currently, the registry plugin doesn't support upgrades.  But Helm does.  So to upgrade an existing release, do the following:
+* Make sure no outstanding changes are pending.  (If there are changes, see Developers section below.)
+* Clone this repo.
+* From root directory run:
+```
+helm upgrade k8s --set grafana.dataSourceURL=<url of prometheus> --set prometheus.externalUrl=<url of prometheus> --set prometheus.externalLabels.env=<env> --set prometheus.retention=< some duration > .
 ```
 
 # Uninstalling the Chart
@@ -70,6 +84,9 @@ helm registry install quay.io/3dsim/kube-prometheus --name=my-release -f values.
   "overwrite": true
 }
 ```
+
+OR use the `wrap-dashboard.sh` script.
+
 * Add to the `grafana.serverDashboardFiles` field in `values.yaml`
 
 # Developers
