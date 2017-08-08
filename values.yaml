@@ -847,7 +847,7 @@ grafana:
                 "tableColumn": "",
                 "targets": [
                     {
-                    "expr": "(sum(kube_pod_container_requested_memory_bytes) / sum(node_memory_MemTotal)) * 100",
+                    "expr": "(sum(kube_pod_container_requested_memory_bytes and on(exported_pod) kube_pod_status_phase{phase=~\"Running|Pending|Unknown\"}) / sum(kube_node_status_allocatable_memory_bytes)) * 100",
                     "format": "time_series",
                     "intervalFactor": 2,
                     "metric": "",

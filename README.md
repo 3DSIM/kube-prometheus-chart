@@ -35,9 +35,20 @@ For DR add this option:
 Currently, the registry plugin doesn't support upgrades.  But Helm does.  So to upgrade an existing release, do the following:
 * Make sure no outstanding changes are pending.  (If there are changes, see Developers section below.)
 * Clone this repo.
+* Make sure your `kubectl` is using the right environment:
+```
+kubectl config use-context <env>
+```
 * From root directory run:
 ```
 helm upgrade k8s --set grafana.dataSourceURL=<url of prometheus> --set prometheus.externalUrl=<url of prometheus> --set prometheus.externalLabels.env=<env> --set prometheus.retention=< some duration > .
+```
+Examples for different environments:
+```
+kubectl config use-context qa && helm upgrade k8s --set grafana.dataSourceURL=http://prometheus-qa.3dsim.com --set prometheus.externalUrl=http://prometheus-qa.3dsim.com --set prometheus.externalLabels.env=qa --set prometheus.retention=720h .
+kubectl config use-context prod && helm upgrade k8s --set grafana.dataSourceURL=http://prometheus-prod.3dsim.com --set prometheus.externalUrl=http://prometheus-prod.3dsim.com --set prometheus.externalLabels.env=prod --set prometheus.retention=720h .
+kubectl config use-context gov && helm upgrade k8s --set grafana.dataSourceURL=http://prometheus-gov.3dsim.com --set prometheus.externalUrl=http://prometheus-gov.3dsim.com --set prometheus.externalLabels.env=gov --set prometheus.retention=720h .
+kubectl config use-context dr && helm upgrade k8s --set grafana.dataSourceURL=http://prometheus-dr.3dsim.com --set prometheus.externalUrl=http://prometheus-dr.3dsim.com --set prometheus.externalLabels.env=dr --set prometheus.retention=720h --set prometheus.resources.requests.memory=1000Mi .
 ```
 
 # Uninstalling the Chart
