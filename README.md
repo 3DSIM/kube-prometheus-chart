@@ -41,14 +41,17 @@ kubectl config use-context <env>
 ```
 * From root directory run:
 ```
-helm upgrade k8s --set grafana.dataSourceURL=<url of prometheus> --set prometheus.externalUrl=<url of prometheus> --set prometheus.externalLabels.env=<env> --set prometheus.retention=< some duration > .
+helm upgrade k8s --set grafana.dataSourceURL=<url of prometheus> --set prometheus.externalUrl=<url of prometheus> --set prometheus.externalLabels.env=<env> --set prometheus.retention=< some duration > --set prometheus.nodeSelector.3dsim\\.com/type=general-purpose --set alertmanager.nodeSelector.3dsim\\.com/type=general-purpose --set grafana.nodeSelector.3dsim\\.com/type=general-purpose .
 ```
 Examples for different environments:
 ```
-kubectl config use-context qa && helm upgrade k8s --set grafana.dataSourceURL=http://prometheus-qa.3dsim.com --set prometheus.externalUrl=http://prometheus-qa.3dsim.com --set prometheus.externalLabels.env=qa --set prometheus.retention=720h .
-kubectl config use-context prod && helm upgrade k8s --set grafana.dataSourceURL=http://prometheus-prod.3dsim.com --set prometheus.externalUrl=http://prometheus-prod.3dsim.com --set prometheus.externalLabels.env=prod --set prometheus.retention=720h .
-kubectl config use-context gov && helm upgrade k8s --set grafana.dataSourceURL=http://prometheus-gov.3dsim.com --set prometheus.externalUrl=http://prometheus-gov.3dsim.com --set prometheus.externalLabels.env=gov --set prometheus.retention=720h .
-kubectl config use-context dr && helm upgrade k8s --set grafana.dataSourceURL=http://prometheus-dr.3dsim.com --set prometheus.externalUrl=http://prometheus-dr.3dsim.com --set prometheus.externalLabels.env=dr --set prometheus.retention=720h --set prometheus.resources.requests.memory=1000Mi .
+kubectl config use-context qa && helm upgrade k8s --set grafana.dataSourceURL=http://prometheus-qa.3dsim.com --set prometheus.externalUrl=http://prometheus-qa.3dsim.com --set prometheus.externalLabels.env=qa --set prometheus.retention=720h --set prometheus.nodeSelector.3dsim\\.com/type=general-purpose --set alertmanager.nodeSelector.3dsim\\.com/type=general-purpose --set grafana.nodeSelector.3dsim\\.com/type=general-purpose .
+
+kubectl config use-context prod && helm upgrade k8s --set grafana.dataSourceURL=http://prometheus-prod.3dsim.com --set prometheus.externalUrl=http://prometheus-prod.3dsim.com --set prometheus.externalLabels.env=prod --set prometheus.retention=720h --set prometheus.nodeSelector.3dsim\\.com/type=general-purpose --set alertmanager.nodeSelector.3dsim\\.com/type=general-purpose --set grafana.nodeSelector.3dsim\\.com/type=general-purpose .
+
+kubectl config use-context gov && helm upgrade k8s --set grafana.dataSourceURL=http://prometheus-gov.3dsim.com --set prometheus.externalUrl=http://prometheus-gov.3dsim.com --set prometheus.externalLabels.env=gov --set prometheus.retention=720h --set prometheus.nodeSelector.3dsim\\.com/type=general-purpose --set alertmanager.nodeSelector.3dsim\\.com/type=general-purpose --set grafana.nodeSelector.3dsim\\.com/type=general-purpose .
+
+kubectl config use-context dr && helm upgrade k8s --set grafana.dataSourceURL=http://prometheus-dr.3dsim.com --set prometheus.externalUrl=http://prometheus-dr.3dsim.com --set prometheus.externalLabels.env=dr --set prometheus.retention=720h --set prometheus.resources.requests.memory=1000Mi --set prometheus.nodeSelector.3dsim\\.com/type=general-purpose --set alertmanager.nodeSelector.3dsim\\.com/type=general-purpose --set grafana.nodeSelector.3dsim\\.com/type=general-purpose .
 ```
 
 # Uninstalling the Chart
@@ -108,7 +111,7 @@ If you make changes and want to push a new version to quay.io, do the following.
 ```
 helm repo add opsgoodness http://charts.opsgoodness.com
 helm repo add cloudposse https://charts.cloudposse.com/incubator
-rm -rf charts/ appr_charts/
+rm -rf charts/ appr_charts/ requirements.lock
 helm registry dep --overwrite
 helm dep build
 ```

@@ -38,7 +38,7 @@ dependencies:
   name: grafana
   repository: file://appr_charts/3dsim/grafana
   tags: null
-  version: 0.1.0
+  version: 0.1.1
 - alias: ""
   condition: ""
   enabled: false
@@ -79,5 +79,5 @@ dependencies:
   repository: https://charts.cloudposse.com/incubator
   tags: null
   version: 0.1.0
-digest: sha256:a573d6d62ffb1ac901eb2f910c99d8216d52eeaf33fc85fe1efdf2872adef6ea
-generated: 2017-08-01T15:49:16.301179739-06:00
+digest: sha256:cddb8da38002bfe07b4c491543621fef26b8e30d2141a75e191af9f871f87457
+generated: 2017-08-10T13:17:36.110351118-06:00

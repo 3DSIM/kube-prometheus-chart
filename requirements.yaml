@@ -4,7 +4,7 @@ appr:
   version: 0.1.0
 - name: quay.io/3dsim/grafana
   repository: appr://
-  version: 0.1.0
+  version: 0.1.1
 dependencies:
 - name: exporter-kube-state
   repository: https://charts.cloudposse.com/incubator
@@ -20,7 +20,7 @@ dependencies:
   version: 0.1.0
 - name: grafana
   repository: file://appr_charts/3dsim/grafana
-  version: 0.1.0
+  version: 0.1.1
 - name: prometheus
   repository: http://charts.opsgoodness.com
   version: 0.0.3
