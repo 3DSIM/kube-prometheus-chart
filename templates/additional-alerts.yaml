@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: "prometheus"
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    heritage: {{ .Release.Service }}
+    prometheus: {{ .Release.Name }}
+    release: {{ .Release.Name }}
+  name: {{ template "fullname" . }}
+data:
+  # Additional rules to add for monitoring 3DSIM clusters
+  additional.rules: |-
+    # These metrics come from kube-state-metrics.  This rule could potentially be added to the default rules for kube-state-metrics
+    ALERT DeploymentReplicasCountMismatch
+      IF (kube_deployment_spec_replicas == bool kube_deployment_status_replicas_available) == 0
+      FOR 5m
+      LABELS {
+        service = "k8s",
+        severity = "warning",
+      }
+      ANNOTATIONS {
+        summary = "Deployment does not have desired replica count",
+        description = "Deployment {{`{{ $labels.deployment }}`}} does not have the desired number of replicas.  See Developer Notebook -> Infrastructure -> Monitoring and Alerting -> Alerts -> DeploymentReplicasCountMismatch for more details.  https://3dsim.sharepoint.com/Developer/_layouts/OneNote.aspx?id=%2FDeveloper%2FSiteAssets%2FDeveloper%20Notebook&wd=target%28Infrastructure%2FMonitoring%20and%20Alerting.one%7C2E96402D-A541-E945-B342-7E6CC1807A62%2FDeploymentReplicasCountMismatch%7C23E372F4-AC81-2E4D-A167-3235FF830297%2F%29",
+      }
