@@ -23,3 +23,14 @@ data:
         summary = "Deployment does not have desired replica count",
         description = "Deployment {{`{{ $labels.deployment }}`}} does not have the desired number of replicas.  See Developer Notebook -> Infrastructure -> Monitoring and Alerting -> Alerts -> DeploymentReplicasCountMismatch for more details.  https://3dsim.sharepoint.com/Developer/_layouts/OneNote.aspx?id=%2FDeveloper%2FSiteAssets%2FDeveloper%20Notebook&wd=target%28Infrastructure%2FMonitoring%20and%20Alerting.one%7C2E96402D-A541-E945-B342-7E6CC1807A62%2FDeploymentReplicasCountMismatch%7C23E372F4-AC81-2E4D-A167-3235FF830297%2F%29",
       }
+    ALERT MultiplePodsForJob
+      IF count(label_replace(kube_pod_labels{label_job_name=~".+"}, "exported_job", "$1", "label_job_name", "(.+)") and on(exported_job) kube_job_status_active==1) by (exported_job) > 1
+      FOR 1m
+      LABELS {
+        service = "k8s",
+        severity = "warning",
+      }
+      ANNOTATIONS {
+        summary = "Job has started multiple pods",
+        description = "Job {{`{{ $labels.exported_job }}`}} has started multiple pods.  See Developer Notebook -> Infrastructure -> Monitoring and Alerting -> Alerts -> MultiplePodsForJob for more details.  https://3dsim.sharepoint.com/Developer/_layouts/OneNote.aspx?id=%2FDeveloper%2FSiteAssets%2FDeveloper%20Notebook&wd=target%28Infrastructure%2FMonitoring%20and%20Alerting.one%7C2E96402D-A541-E945-B342-7E6CC1807A62%2FMultiplePodsForJob%7C28CD04C5-077D-304A-AFF7-EA114A2DDD0C%2F%29",
+      }
