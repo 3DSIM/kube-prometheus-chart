@@ -24,7 +24,7 @@ data:
         description = "Deployment {{`{{ $labels.deployment }}`}} does not have the desired number of replicas.  See Developer Notebook -> Infrastructure -> Monitoring and Alerting -> Alerts -> DeploymentReplicasCountMismatch for more details.  https://3dsim.sharepoint.com/Developer/_layouts/OneNote.aspx?id=%2FDeveloper%2FSiteAssets%2FDeveloper%20Notebook&wd=target%28Infrastructure%2FMonitoring%20and%20Alerting.one%7C2E96402D-A541-E945-B342-7E6CC1807A62%2FDeploymentReplicasCountMismatch%7C23E372F4-AC81-2E4D-A167-3235FF830297%2F%29",
       }
     ALERT JobOnUnreadyNode
-      IF count((label_replace(kube_pod_labels{label_job_name=~".+"}, "exported_job", "$1", "label_job_name", "(.+)") and on(exported_job) kube_job_status_active==1) * on(exported_pod) group_left(node) kube_pod_info and on(node) kube_node_status_condition{condition="Ready", status="true"} == 0) by (exported_job, node) > 1
+      IF count((label_replace(kube_pod_labels{label_job_name=~".+"}, "exported_job", "$1", "label_job_name", "(.+)") and on(exported_job) kube_job_status_active==1) * on(exported_pod) group_left(node) kube_pod_info and on(node) kube_node_status_condition{condition="Ready", status="true"} == 0) by (exported_job, node) > 0
       FOR 5m
       LABELS {
         service = "k8s",
@@ -32,7 +32,29 @@ data:
       }
       ANNOTATIONS {
         summary = "Job is running on an unready node",
-        description = "Job {{`{{ $labels.exported_job }}`}} is running on node {{`{{ $label.node }}`}} whose Ready status is not true.  See Developer Notebook -> Infrastructure -> Monitoring and Alerting -> Alerts -> MultiplePodsForJob for more details.  https://3dsim.sharepoint.com/Developer/_layouts/OneNote.aspx?id=%2FDeveloper%2FSiteAssets%2FDeveloper%20Notebook&wd=target%28Infrastructure%2FMonitoring%20and%20Alerting.one%7C2E96402D-A541-E945-B342-7E6CC1807A62%2FMultiplePodsForJob%7C28CD04C5-077D-304A-AFF7-EA114A2DDD0C%2F%29",
+        description = "Job {{`{{ $labels.exported_job }}`}} is running on node {{`{{ $label.node }}`}} whose Ready status is not true.  See https://3dsim.sharepoint.com/Developer/_layouts/OneNote.aspx?id=%2FDeveloper%2FSiteAssets%2FDeveloper%20Notebook&wd=target%28Infrastructure%2FMonitoring%20and%20Alerting.one%7C2E96402D-A541-E945-B342-7E6CC1807A62%2FMultiplePodsForJob%7C28CD04C5-077D-304A-AFF7-EA114A2DDD0C%2F%29",
+      }
+    ALERT PodNotStarting
+      IF kube_pod_status_phase{phase=~"Pending|Unknown"} == 1
+      FOR 30m
+      LABELS {
+        service = "k8s",
+        severity = "warning",
+      }
+      ANNOTATIONS {
+        summary = "A pod is stuck in pending or unknown",
+        description = "Pod {{`{{ $labels.exported_pod }}`}} has been in Pending or Unknown phase for more then 30 minutes.  See https://3dsim.sharepoint.com/Developer/_layouts/OneNote.aspx?id=%2FDeveloper%2FSiteAssets%2FDeveloper%20Notebook&wd=target%28Infrastructure%2FMonitoring%20and%20Alerting.one%7C2E96402D-A541-E945-B342-7E6CC1807A62%2FPodNotStarting%7C2FFD86ED-7FE2-7B43-874F-7B3FF7DD6476%2F%29",
+      }
+    ALERT PodHighRestartCount
+      IF kube_pod_container_status_restarts{exported_namespace!="kube-system", container!="exporter-kube-state"} > 5
+      FOR 1m
+      LABELS {
+        service = "k8s",
+        severity = "warning",
+      }
+      ANNOTATIONS {
+        summary = "A pod has restarted more than 5 times",
+        description = "Pod {{`{{ $labels.exported_pod }}`}} has restarted {{`{{ $value }}`}} times.  See https://3dsim.sharepoint.com/Developer/_layouts/OneNote.aspx?id=%2FDeveloper%2FSiteAssets%2FDeveloper%20Notebook&wd=target%28Infrastructure%2FMonitoring%20and%20Alerting.one%7C2E96402D-A541-E945-B342-7E6CC1807A62%2FPodHighRestartCount%7C8CCDEAA6-00F4-3746-80E6-BE9B7D56CAD9%2F%29",
       }
     ALERT K8SNodeNotReady
       IF kube_node_status_condition{condition="Ready", status="true"} == 0
